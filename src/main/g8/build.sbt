@@ -77,7 +77,6 @@ def profile: Project ⇒ Project = pr => {
   }
   withCoverage
     .enablePlugins(AutomateHeaderPlugin)
-    .enablePlugins(GitVersioning)
 }
 
 def scalaPartV = Def setting (CrossVersion partialVersion scalaVersion.value)
@@ -118,13 +117,6 @@ lazy val coverageSettings = Seq(
       }
     }).transform(node).head
   },
-)
-
-lazy val doNotPublishArtifact = Seq(
-  publishArtifact := false,
-  publishArtifact in (Compile, packageDoc) := false,
-  publishArtifact in (Compile, packageSrc) := false,
-  publishArtifact in (Compile, packageBin) := false
 )
 
 lazy val sharedJSSettings = Seq(
@@ -265,24 +257,6 @@ lazy val sharedSettings = Seq(
 
   // -- Settings meant for deployment on oss.sonatype.org
   sonatypeProfileName := organization.value,
-
-  // ---------------------------------------------------------------------------
-  // Versioning settings — based on Git
-
-  git.baseVersion := "0.1.0",
-
-  git.gitTagToVersionNumber := {
-    case ReleaseTag(v) => Some(v)
-    case _ => None
-  },
-
-  git.formattedShaVersion := {
-    val suffix = git.makeUncommittedSignifierSuffix(git.gitUncommittedChanges.value, git.uncommittedSignifier.value)
-
-    git.gitHeadCommit.value map { _.substring(0, 7) } map { sha =>
-      git.baseVersion.value + "-" + sha + suffix
-    }
-  }
 )
 
 lazy val root = project.in(file("."))
@@ -290,9 +264,10 @@ lazy val root = project.in(file("."))
   .aggregate($sub_project_id$JVM, $sub_project_id$JS)
   .configure(profile)
   .settings(sharedSettings)
-  .settings(doNotPublishArtifact)
   .settings(unidocSettings)
   .settings(
+    // Do not publish
+    skip in publish := true,
     // Try really hard to not execute tasks in parallel ffs
     Global / concurrentRestrictions := Tags.limitAll(1) :: Nil,
   )
@@ -302,11 +277,14 @@ lazy val site = project.in(file("site"))
   .enablePlugins(MicrositesPlugin)
   .enablePlugins(MdocPlugin)
   .settings(sharedSettings)
-  .settings(doNotPublishArtifact)
   .dependsOn($sub_project_id$JVM)
   .settings{
     import microsites._
     Seq(
+      // Do not publish
+      skip in publish := true,
+
+      // Website settings
       micrositeName := "$name$",
       micrositeDescription := "$project_description$",
       micrositeAuthor := "$developer_name$",
