@@ -1,17 +1,6 @@
-name: "Trigger Dependabot"
-
-on:
-  workflow_dispatch:  # Allows manual trigger from the Actions tab
-
-jobs:
-  dependabot:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Run Dependabot Maven Updates
-        uses: dependabot/fetch-metadata@v1 # Dependabot metadata action
-        with:
-          package-manager: "maven"
-          directory: "/"
+version: 2
+updates:
+  - package-ecosystem: "mavel"
+    directory: "/"
+    schedule:
+        interval: "daily"
