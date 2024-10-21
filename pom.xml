@@ -42,7 +42,7 @@
         <dependency>
             <groupId>org.scalacheck</groupId>
             <artifactId>scalacheck_2.12</artifactId>
-            <version>1.14.3</version>
+            <version>1.18.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
