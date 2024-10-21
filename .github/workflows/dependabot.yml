@@ -13,5 +13,5 @@ jobs:
       - name: Run Dependabot Maven Updates
         uses: dependabot/fetch-metadata@v1 # Dependabot metadata action
         with:
-          package-manager: "maven"
+          package-manager: "sbt"
           directory: "/"
