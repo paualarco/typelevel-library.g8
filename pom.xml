@@ -78,7 +78,7 @@
         <dependency>
             <groupId>com.47deg</groupId>
             <artifactId>github4s_2.12</artifactId>
-            <version>0.21.0</version>
+            <version>0.33.3</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
